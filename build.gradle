@@ -16,19 +16,15 @@ repositories {
 def runeLiteVersion = 'latest.release'
 
 dependencies {
-    compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
+    implementation group: 'net.runelite', name:'client', version: runeLiteVersion
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
     testImplementation 'junit:junit:4.12'
-    testImplementation group: 'net.runelite', name:'client', version: runeLiteVersion
     testImplementation group: 'net.runelite', name:'jshell', version: runeLiteVersion
-
-    // Add this line - this makes RuneLite available at runtime
-    runtimeOnly group: 'net.runelite', name:'client', version: runeLiteVersion
 }
 
-group = 'com.example'
+group = 'com.ironmanqol'
 version = '1.0-SNAPSHOT'
 
 tasks.withType(JavaCompile).configureEach {
@@ -36,28 +32,12 @@ tasks.withType(JavaCompile).configureEach {
 	options.release.set(11)
 }
 
-tasks.register('shadowJar', Jar) {
-	dependsOn configurations.testRuntimeClasspath
+jar {
 	manifest {
-		attributes('Main-Class': 'com.example.ExamplePluginTest', 'Multi-Release': true)
+		attributes('Plugin-Version': version,
+				   'Plugin-Id': project.name,
+				   'Plugin-Provider': 'IronmanQol',
+				   'Plugin-Description': 'Quality of life improvements for ironman accounts',
+				   'Plugin-License': 'BSD-2-Clause')
 	}
-
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-	from sourceSets.main.output
-	from sourceSets.test.output
-	from {
-		configurations.testRuntimeClasspath.collect { file ->
-			file.isDirectory() ? file : zipTree(file)
-		}
-	}
-
-	exclude 'META-INF/INDEX.LIST'
-	exclude 'META-INF/*.SF'
-	exclude 'META-INF/*.DSA'
-	exclude 'META-INF/*.RSA'
-	exclude '**/module-info.class'
-
-	group = BasePlugin.BUILD_GROUP
-	archiveClassifier.set('shadow')
-	archiveFileName.set("${rootProject.name}-${project.version}-all.jar")
 }

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Plugin-Version: 1.0-SNAPSHOT
+Plugin-Id: ironman-qol-plugin
+Plugin-Provider: IronmanQol
+Plugin-Description: Quality of life improvements for ironman accounts
+Plugin-License: BSD-2-Clause
+
